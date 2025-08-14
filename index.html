@@ -371,21 +371,8 @@
             transform: translateY(-1px);
         }
         
-        .btn-edit {
-            background: #ff9500;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-edit:hover {
-            background: #e6850e;
-            transform: translateY(-1px);
-        }
+
+
         
         .error-message {
             display: none;
@@ -539,9 +526,6 @@
                         <button class="btn-copy" onclick="copyResult(event)">
                             📋 复制内容
                         </button>
-                        <button class="btn-edit" onclick="editResult()">
-                            ✏️ 编辑内容
-                        </button>
                     </div>
                 </div>
             </div>
@@ -587,12 +571,19 @@
                 card.addEventListener('click', function() {
                     const platformId = this.dataset.platform;
 
+                    // 如果点击的是已选中的平台，则取消选择
                     if (this.classList.contains('selected')) {
                         this.classList.remove('selected');
-                        selectedPlatforms = selectedPlatforms.filter(p => p !== platformId);
+                        selectedPlatforms = [];
                     } else {
+                        // 先清除所有平台的选中状态
+                        document.querySelectorAll('.platform-card').forEach(card => {
+                            card.classList.remove('selected');
+                        });
+
+                        // 选中当前平台
                         this.classList.add('selected');
-                        selectedPlatforms.push(platformId);
+                        selectedPlatforms = [platformId];
                     }
 
                     updateGenerateButton();
@@ -930,15 +921,7 @@
                 showError('复制失败，请手动选择复制');
             }
         }
-        
-        // 编辑结果
-        function editResult() {
-            const content = resultContent.textContent;
-            const newContent = prompt('编辑内容:', content);
-            if (newContent !== null) {
-                resultContent.textContent = newContent;
-            }
-        }
+
         
         // 生成请求ID
         function generateRequestId() {
