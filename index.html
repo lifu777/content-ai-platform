@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自媒体内容生成平台</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #007aff;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #007aff;
+        }
+        
+        .cta-button {
+            background: #007aff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: #0056cc;
+        }
+        
+        /* 主要内容区域 */
+        .main-container {
+            margin-top: 80px;
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .btn-primary {
+            background: #007aff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            background: #0056cc;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* 功能卡片 */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content-generator {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .generator-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+        }
+        
+        .label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 2px solid #e5e5e7;
+            border-radius: 15px;
+            font-size: 16px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .textarea:focus {
+            outline: none;
+            border-color: #007aff;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+        
+        .char-count {
+            text-align: right;
+            font-size: 14px;
+            color: #86868b;
+            margin-top: 8px;
+        }
+        
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .platform-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #e5e5e7;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        .platform-card:hover {
+            border-color: #007aff;
+            background: rgba(0, 122, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .platform-card.selected {
+            border-color: #007aff;
+            background: #007aff;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+        }
+        
+        .platform-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        
+        .platform-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .generate-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .generate-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 122, 255, 0.4);
+        }
+        
+        .generate-button:disabled {
+            background: #c7c7cc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result-section {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 122, 255, 0.2);
+        }
+        
+        .result-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            border-left: 4px solid #007aff;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-copy {
+            background: #34c759;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-copy:hover {
+            background: #28a745;
+            transform: translateY(-1px);
+        }
+        
+        .btn-edit {
+            background: #ff9500;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit:hover {
+            background: #e6850e;
+            transform: translateY(-1px);
+        }
+        
+        .error-message {
+            display: none;
+            background: #ff3b30;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 500;
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            
+            .hero-content p {
+                font-size: 18px;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+        
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">🚀 ContentAI</a>
+            <ul class="nav-links">
+                <li><a href="#generator">生成器</a></li>
+                <li><a href="setup-guide.html">设置指南</a></li>
+                <li><a href="webhook-test.html">测试工具</a></li>
+                <li><a href="#help">帮助</a></li>
+            </ul>
+            <a href="#generator" class="cta-button">开始创作</a>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <div class="main-container">
+        <!-- Hero区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>AI驱动的<br>自媒体内容创作</h1>
+                <p>一键生成适配多平台的优质内容，让创作变得简单高效。基于先进的AI技术，为您的自媒体运营提供强大支持。</p>
+                <div class="hero-buttons">
+                    <a href="#generator" class="btn-primary">立即体验</a>
+                    <a href="#features" class="btn-secondary">了解更多</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <!-- 这里可以放置一个展示图片或动画 -->
+                <div style="background: rgba(255,255,255,0.1); height: 300px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                    📱💻📝<br>多平台内容预览
+                </div>
+            </div>
+        </section>
+
+        <!-- 内容生成器 -->
+        <section id="generator" class="content-generator">
+            <div class="feature-card fade-in">
+                <h2 class="generator-title">🎯 智能内容生成器</h2>
+                
+                <form id="contentForm">
+                    <!-- 主题输入 -->
+                    <div class="form-group">
+                        <label class="label" for="topic">📝 内容主题</label>
+                        <textarea 
+                            id="topic" 
+                            class="textarea" 
+                            placeholder="请输入您想要创作的主题内容，例如：人工智能在保险行业的应用前景..."
+                            maxlength="500"
+                        ></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span>/500 字符
+                        </div>
+                    </div>
+                    
+                    <!-- 平台选择 -->
+                    <div class="form-group">
+                        <label class="label">🎯 选择发布平台</label>
+                        <div class="platforms-grid" id="platformsGrid">
+                            <!-- 平台卡片将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 生成按钮 -->
+                    <button type="submit" class="generate-button" id="generateBtn">
+                        <span class="loading-spinner" id="loadingSpinner"></span>
+                        <span id="buttonText">✨ 生成内容</span>
+                    </button>
+
+                    <!-- 连接状态指示器 -->
+                    <div style="text-align: center; margin-top: 15px; font-size: 14px; color: #86868b;">
+                        <span class="status-indicator" id="connectionStatus"></span>
+                        <span id="connectionText">检查连接状态...</span>
+                        <button type="button" onclick="checkConnection()" style="background: transparent; color: #007aff; border: none; padding: 0; margin-left: 10px; cursor: pointer; text-decoration: underline;">
+                            重新检查
+                        </button>
+                    </div>
+
+                    <!-- 调试信息 -->
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button type="button" onclick="toggleDebugMode()" style="background: transparent; color: #86868b; border: 1px solid #e5e5e7; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer;">
+                            🔍 调试模式
+                        </button>
+                        <button type="button" onclick="testWithMockData()" style="background: transparent; color: #ff9500; border: 1px solid #ff9500; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; margin-left: 5px;">
+                            🎭 模拟测试
+                        </button>
+                        <a href="setup-guide.html" style="margin-left: 10px; color: #007aff; text-decoration: none; font-size: 12px;">
+                            📖 设置指南
+                        </a>
+                    </div>
+                </form>
+                
+                <!-- 错误信息 -->
+                <div class="error-message" id="errorMessage"></div>
+                
+                <!-- 结果展示 -->
+                <div class="result-section" id="resultSection">
+                    <div class="result-title">
+                        🎉 生成结果
+                    </div>
+                    <div class="result-content" id="resultContent"></div>
+                    <div class="result-actions">
+                        <button class="btn-copy" onclick="copyResult()">
+                            📋 复制内容
+                        </button>
+                        <button class="btn-edit" onclick="editResult()">
+                            ✏️ 编辑内容
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 配置文件 -->
+    <script src="config.js"></script>
+
+    <script>
+        // 使用配置文件中的设置
+        const WEBHOOK_URL = CONFIG.WEBHOOK_URL;
+        
+        // DOM元素
+        const topicInput = document.getElementById('topic');
+        const charCount = document.getElementById('charCount');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const buttonText = document.getElementById('buttonText');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultSection = document.getElementById('resultSection');
+        const resultContent = document.getElementById('resultContent');
+        
+        // 选中的平台
+        let selectedPlatforms = [];
+
+        // 调试模式
+        let debugMode = false;
+
+        // 初始化平台卡片
+        function initializePlatforms() {
+            const platformsGrid = document.getElementById('platformsGrid');
+
+            CONFIG.PLATFORMS.forEach(platform => {
+                const card = document.createElement('div');
+                card.className = 'platform-card';
+                card.dataset.platform = platform.id;
+                card.innerHTML = `
+                    <div class="platform-icon">${platform.icon}</div>
+                    <div class="platform-name">${platform.name}</div>
+                `;
+
+                card.addEventListener('click', function() {
+                    const platformId = this.dataset.platform;
+
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        selectedPlatforms = selectedPlatforms.filter(p => p !== platformId);
+                    } else {
+                        this.classList.add('selected');
+                        selectedPlatforms.push(platformId);
+                    }
+
+                    updateGenerateButton();
+                });
+
+                platformsGrid.appendChild(card);
+            });
+        }
+
+        // 字符计数
+        topicInput.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = `${count}/${CONFIG.VALIDATION.TOPIC_MAX_LENGTH} 字符`;
+
+            if (count < CONFIG.VALIDATION.TOPIC_MIN_LENGTH) {
+                charCount.style.color = '#ff3b30';
+            } else if (count > CONFIG.VALIDATION.TOPIC_MAX_LENGTH) {
+                charCount.style.color = '#ff3b30';
+            } else {
+                charCount.style.color = '#86868b';
+            }
+
+            // 更新按钮状态
+            updateGenerateButton();
+        });
+        
+        // 更新生成按钮状态
+        function updateGenerateButton() {
+            const hasContent = topicInput.value.trim().length >= CONFIG.VALIDATION.TOPIC_MIN_LENGTH;
+            const hasPlatforms = selectedPlatforms.length >= CONFIG.VALIDATION.MIN_PLATFORMS;
+
+            generateBtn.disabled = !(hasContent && hasPlatforms);
+        }
+        
+        // 注意：输入变化监听已在字符计数函数中处理
+        
+        // 表单提交
+        document.getElementById('contentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const topic = topicInput.value.trim();
+            
+            // 验证输入
+            if (!topic || topic.length < CONFIG.VALIDATION.TOPIC_MIN_LENGTH) {
+                showError(`请输入至少${CONFIG.VALIDATION.TOPIC_MIN_LENGTH}个字符的主题内容`);
+                return;
+            }
+
+            if (topic.length > CONFIG.VALIDATION.TOPIC_MAX_LENGTH) {
+                showError(`主题内容不能超过${CONFIG.VALIDATION.TOPIC_MAX_LENGTH}个字符`);
+                return;
+            }
+
+            if (selectedPlatforms.length < CONFIG.VALIDATION.MIN_PLATFORMS) {
+                showError('请至少选择一个发布平台');
+                return;
+            }
+
+            if (selectedPlatforms.length > CONFIG.VALIDATION.MAX_PLATFORMS) {
+                showError(`最多只能选择${CONFIG.VALIDATION.MAX_PLATFORMS}个平台`);
+                return;
+            }
+            
+            // 显示加载状态
+            setLoading(true);
+            hideError();
+            hideResult();
+            
+            try {
+                // 构建发送到N8N的数据，确保与工作流表单字段匹配
+                const requestData = {
+                    // 主题字段 - 提供多种可能的字段名
+                    topic: topic,
+                    cleanText: topic,
+                    "保险主题": topic,
+                    prompt: topic,
+
+                    // 平台字段 - 提供多种可能的字段名
+                    创作平台: selectedPlatforms,
+                    platform: selectedPlatforms,
+                    platforms: selectedPlatforms,
+
+                    // 元数据
+                    requestId: generateRequestId(),
+                    timestamp: new Date().toISOString(),
+
+                    // 为了兼容性，也在body字段中包含数据
+                    body: {
+                        cleanText: topic,
+                        "保险主题": topic,
+                        prompt: topic,
+                        "创作平台": selectedPlatforms,
+                        platform: selectedPlatforms,
+                        platforms: selectedPlatforms
+                    }
+                };
+
+                if (debugMode) {
+                    console.log('🔍 调试模式 - 用户输入主题:', topic);
+                    console.log('🔍 调试模式 - 选中的平台ID:', selectedPlatforms);
+                    console.log('🔍 调试模式 - 发送数据到N8N:', requestData);
+                    showResult('🔍 调试信息：\n\n📝 用户输入主题: ' + topic +
+                              '\n🎯 选中平台: ' + selectedPlatforms.join(', ') +
+                              '\n\n📤 完整发送数据：\n' + JSON.stringify(requestData, null, 2) +
+                              '\n\n正在发送请求到N8N...');
+                } else {
+                    console.log('发送数据到N8N:', requestData);
+                }
+
+                // 创建AbortController用于超时控制
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), CONFIG.API_TIMEOUT);
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestData),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                
+                // 处理HTTP错误状态
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+
+                    if (response.status === 404 && errorData.message && errorData.message.includes('webhook')) {
+                        throw new Error('N8N_WEBHOOK_NOT_ACTIVATED');
+                    } else if (response.status === 500 && errorData.message === "Error in workflow") {
+                        throw new Error('N8N_WORKFLOW_ERROR');
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                }
+                
+                const responseText = await response.text();
+
+                if (debugMode) {
+                    console.log('🔍 调试模式 - N8N响应:', responseText);
+                    let parsedResponse;
+                    try {
+                        parsedResponse = JSON.parse(responseText);
+                        console.log('🔍 调试模式 - 解析后的响应:', parsedResponse);
+                    } catch (e) {
+                        console.log('🔍 调试模式 - 响应不是JSON格式');
+                    }
+                    showResult('🔍 调试信息：\n\n📤 发送到N8N的数据：\n' + JSON.stringify(requestData, null, 2) +
+                              '\n\n📥 N8N原始响应：\n' + responseText +
+                              '\n\n📊 解析后的响应结构：\n' + (parsedResponse ? JSON.stringify(parsedResponse, null, 2) : '无法解析为JSON') +
+                              '\n\n📈 HTTP状态码：' + response.status);
+                    return;
+                } else {
+                    console.log('N8N响应:', responseText);
+                }
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    // 如果响应不是JSON格式，直接显示文本内容
+                    console.log('响应不是JSON格式，直接显示文本');
+                    showResult(responseText);
+                    return;
+                }
+
+                // 处理不同的响应格式
+                if (result.success && result.data && result.data.content) {
+                    // 标准格式
+                    showResult(result.data.content);
+                } else if (result.output) {
+                    // N8N AI Agent输出格式：{"output": "内容"}
+                    showResult(result.output);
+                } else if (result.response) {
+                    // N8N返回的格式：{"response": "内容"}
+                    // 提取AI生成的实际内容
+                    const content = extractActualContent(result.response);
+                    showResult(content);
+                } else if (result.content) {
+                    // 直接包含content字段的响应
+                    showResult(result.content);
+                } else if (typeof result === 'string') {
+                    // 字符串响应
+                    const content = extractActualContent(result);
+                    showResult(content);
+                } else if (result.message === "Error in workflow") {
+                    // N8N工作流内部错误
+                    showError('N8N工作流执行出错\n\n可能原因：\n• AI模型配置问题\n• 平台名称不匹配\n• 缺少必要的凭据\n\n请检查N8N工作流的执行日志');
+                } else if (result.error) {
+                    showError(result.error.message || result.error || '生成失败，请重试');
+                } else {
+                    // 未知格式，显示原始响应进行调试
+                    showError('收到未知响应格式：\n' + JSON.stringify(result, null, 2));
+                }
+            } catch (error) {
+                console.error('API调用失败:', error);
+
+                // 详细的错误处理
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showError('网络连接失败，请检查网络连接和webhook URL是否正确');
+                } else if (error.name === 'AbortError') {
+                    showError('请求超时，请稍后重试');
+                } else if (error.message.includes('CORS')) {
+                    showError('跨域请求被阻止，请检查N8N webhook的CORS设置');
+                } else {
+                    showError(`请求失败: ${error.message}`);
+                }
+
+                // 特殊错误处理
+                if (error.message === 'N8N_WEBHOOK_NOT_ACTIVATED') {
+                    showError('🔧 N8N Webhook未激活\n\n请按以下步骤操作：\n1. 打开N8N工作流编辑器\n2. 点击右上角的激活开关\n3. 确保工作流处于Active状态');
+                } else if (error.message === 'N8N_WORKFLOW_ERROR') {
+                    showError('⚠️ N8N工作流执行错误\n\n可能的原因：\n• OpenAI API配置问题\n• 工作流节点配置错误\n• 平台名称不匹配\n\n建议：\n1. 检查N8N执行日志\n2. 确认OpenAI凭据有效\n3. 验证工作流配置');
+                }
+
+                // 在控制台显示详细错误信息供调试
+                console.log('请求数据:', requestData);
+                console.log('Webhook URL:', WEBHOOK_URL);
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        // 设置加载状态
+        function setLoading(loading) {
+            if (loading) {
+                loadingSpinner.style.display = 'inline-block';
+                buttonText.textContent = '正在生成...';
+                generateBtn.disabled = true;
+
+                // 添加加载提示
+                let dots = 0;
+                const loadingInterval = setInterval(() => {
+                    dots = (dots + 1) % 4;
+                    buttonText.textContent = '正在生成' + '.'.repeat(dots);
+                }, 500);
+
+                // 存储interval ID以便清除
+                generateBtn.dataset.loadingInterval = loadingInterval;
+            } else {
+                loadingSpinner.style.display = 'none';
+                buttonText.textContent = '✨ 生成内容';
+                generateBtn.disabled = false;
+
+                // 清除加载动画
+                if (generateBtn.dataset.loadingInterval) {
+                    clearInterval(generateBtn.dataset.loadingInterval);
+                    delete generateBtn.dataset.loadingInterval;
+                }
+
+                updateGenerateButton();
+            }
+        }
+        
+        // 显示错误
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            errorMessage.classList.add('fade-in');
+        }
+        
+        // 隐藏错误
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+        
+        // 显示结果
+        function showResult(content) {
+            resultContent.textContent = content;
+            resultSection.style.display = 'block';
+            resultSection.classList.add('fade-in');
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 隐藏结果
+        function hideResult() {
+            resultSection.style.display = 'none';
+        }
+        
+        // 复制结果
+        function copyResult() {
+            const content = resultContent.textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                // 临时改变按钮文本
+                const copyBtn = event.target;
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ 已复制';
+                copyBtn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = '#34c759';
+                }, 2000);
+            }).catch(() => {
+                showError('复制失败，请手动选择复制');
+            });
+        }
+        
+        // 编辑结果
+        function editResult() {
+            const content = resultContent.textContent;
+            const newContent = prompt('编辑内容:', content);
+            if (newContent !== null) {
+                resultContent.textContent = newContent;
+            }
+        }
+        
+        // 生成请求ID
+        function generateRequestId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // 提取AI生成的实际内容
+        function extractActualContent(responseText) {
+            // 如果响应包含"内容如下："，提取其后的内容
+            if (responseText.includes('内容如下：')) {
+                const parts = responseText.split('内容如下：');
+                if (parts.length > 1) {
+                    // 提取"内容如下："后面的部分，去掉前后空白
+                    let content = parts[1].trim();
+
+                    // 移除可能的引号包围
+                    if (content.startsWith('"') && content.endsWith('"')) {
+                        content = content.slice(1, -1);
+                    }
+
+                    // 处理转义字符
+                    content = content.replace(/\\n/g, '\n');
+
+                    return content;
+                }
+            }
+
+            // 如果响应包含"生成了"和"推文"等关键词，尝试提取实际内容
+            if (responseText.includes('生成了') && (responseText.includes('推文') || responseText.includes('内容'))) {
+                // 查找包含实际内容的部分
+                const lines = responseText.split('\n');
+                let contentStartIndex = -1;
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    // 查找包含实际内容的行（通常是较长的行，且不包含技术术语）
+                    if (line.length > 20 &&
+                        !line.includes('Agent') &&
+                        !line.includes('平台') &&
+                        !line.includes('生成了') &&
+                        !line.includes('根据您的要求')) {
+                        contentStartIndex = i;
+                        break;
+                    }
+                }
+
+                if (contentStartIndex !== -1) {
+                    // 提取从找到的行开始的内容，直到遇到空行或结束
+                    let extractedContent = '';
+                    for (let i = contentStartIndex; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (line === '' && extractedContent.length > 0) {
+                            break; // 遇到空行停止
+                        }
+                        if (line !== '') {
+                            extractedContent += (extractedContent ? '\n' : '') + line;
+                        }
+                    }
+
+                    if (extractedContent.length > 10) {
+                        return extractedContent;
+                    }
+                }
+            }
+
+            // 如果无法提取，返回原始内容
+            return responseText;
+        }
+
+        // 切换调试模式
+        function toggleDebugMode() {
+            debugMode = !debugMode;
+            const button = event.target;
+            if (debugMode) {
+                button.textContent = '🔍 调试模式 (开启)';
+                button.style.background = '#007aff';
+                button.style.color = 'white';
+                console.log('🔍 调试模式已开启');
+            } else {
+                button.textContent = '🔍 调试模式';
+                button.style.background = 'transparent';
+                button.style.color = '#86868b';
+                console.log('🔍 调试模式已关闭');
+            }
+        }
+
+        // 模拟测试功能
+        function testWithMockData() {
+            const topic = topicInput.value.trim();
+
+            if (!topic) {
+                showError('请先输入主题内容');
+                return;
+            }
+
+            if (selectedPlatforms.length === 0) {
+                showError('请先选择平台');
+                return;
+            }
+
+            // 显示加载状态
+            setLoading(true);
+            hideError();
+            hideResult();
+
+            // 模拟API延迟
+            setTimeout(() => {
+                const mockContent = generateMockContent(topic, selectedPlatforms);
+                showResult(mockContent);
+                setLoading(false);
+            }, 2000);
+        }
+
+        // 生成模拟内容
+        function generateMockContent(topic, platforms) {
+            const platformContents = {
+                '微信': `🌟 ${topic}
+
+随着科技的快速发展，这个话题越来越受到关注。
+
+✅ 核心观点：
+• 技术创新带来新机遇
+• 需要平衡发展与挑战
+• 未来前景值得期待
+
+💭 个人思考：
+变化总是伴随着机遇，关键是如何把握。
+
+#科技创新 #未来趋势`,
+
+                '小红书': `${topic} ✨
+
+姐妹们！今天想和大家聊聊这个超有意思的话题～
+
+🔥 重点来了：
+✨ 创新技术正在改变我们的生活
+✨ 每个人都应该了解这些趋势
+✨ 抓住机会，拥抱变化
+
+💡 我的看法：
+这真的是一个值得关注的领域，未来可期！
+
+你们觉得呢？评论区聊聊～
+
+#科技生活 #未来趋势 #干货分享 #学习笔记`,
+
+                'X': `🚀 ${topic}
+
+Key insights:
+• Innovation drives progress
+• Challenges create opportunities
+• Future looks promising
+
+The intersection of technology and human potential continues to amaze me.
+
+#Innovation #Future #Tech`
+            };
+
+            let result = `🎭 模拟生成内容 (仅供预览)\n\n`;
+
+            platforms.forEach(platform => {
+                if (platformContents[platform]) {
+                    result += `📱 ${platform}平台内容：\n`;
+                    result += `${platformContents[platform]}\n\n`;
+                    result += `${'='.repeat(50)}\n\n`;
+                }
+            });
+
+            result += `💡 这是模拟内容，实际内容需要N8N工作流正常运行后生成。`;
+
+            return result;
+        }
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // 检查连接状态
+        async function checkConnection() {
+            const statusEl = document.getElementById('connectionStatus');
+            const textEl = document.getElementById('connectionText');
+
+            statusEl.className = 'status-indicator loading';
+            textEl.textContent = '检查连接中...';
+
+            try {
+                // 发送一个简单的测试请求
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        test: true,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    statusEl.className = 'status-indicator online';
+                    textEl.textContent = 'N8N连接正常';
+                } else {
+                    statusEl.className = 'status-indicator offline';
+                    textEl.textContent = `连接异常 (${response.status})`;
+                }
+            } catch (error) {
+                statusEl.className = 'status-indicator offline';
+                textEl.textContent = '连接失败';
+                console.error('连接检查失败:', error);
+            }
+        }
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePlatforms();
+            updateGenerateButton();
+
+            // 检查连接状态
+            setTimeout(checkConnection, 1000);
+
+            // 添加页面加载动画
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

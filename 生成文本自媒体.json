@@ -1,0 +1,503 @@
+{
+  "name": "生成文本自媒体",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=主题：{{ $json.cleanText }}\n创作平台：{{ $('Webhook').item.json[\"platforms\"] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "你是一位任务调度员（管理员），负责分析用户需求并将任务分配给最合适的AI Agent，不需要自己执行具体工作。你的价值在于能准确判断哪个AI Agent最适合处理特定任务，让整个协作更流畅。"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -688,
+        -544
+      ],
+      "id": "fda103ad-6d23-4ec3-a79d-7748b963e83b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-content",
+        "options": {
+          "noResponseBody": false
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1184,
+        -528
+      ],
+      "id": "a0313565-a1dd-4943-a3da-c267b8cbb76c",
+      "name": "Webhook",
+      "webhookId": "cdac5ca7-54d0-427a-93b7-98c7acc1cecd"
+    },
+    {
+      "parameters": {
+        "content": "## TIPS\n- 名称可使用：英文、数字、下划线_、连字符-\n- 不允许包含空格、特殊字符（如句号、括号、@、# 等）或中文",
+        "height": 288,
+        "width": 480,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "122feb75-9c94-4854-afbc-c0cd603d5e54",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "toolDescription": "当需要撰写小红书/rednote帖子，请调用此AI Agent",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=你是一位资深小红书内容创作专家，擅长将文章内容转化为吸引眼球且具有高互动率的小红书风格文案。请根据提供的内容，创作一篇符合以下要求的小红书文案：\n\n尽量应用我们提供的Google Drive中的数据库生成小红书的文案内容，如果数据库中没有找到相关的，再利用LLM自动生成。\n\n## 风格要求：\n1. 开头使用1-2个吸引眼球的emoji和简洁有力的标题，快速抓住读者注意力。\n2. 语言年轻化、亲切自然，符合小红书用户的表达习惯，带有轻松幽默感。\n3. 适当插入emoji表情，增强趣味性和视觉效果，但不过度堆砌。\n4. 分段清晰，每个段落突出重点，便于阅读和理解。\n5. 结尾部分明确引导用户进行点赞、收藏和评论，提升互动率。\n\n## 内容结构：\n1. 【开头】：用1-2个emoji + 吸引人的标题，营造氛围。\n2. 【正文】：包含3-4个要点，每个要点前加emoji符号，条理清晰，信息丰富。\n3. 【总结】：用简洁有力的语言总结核心观点，增强印象。\n4. 【互动】：设计贴合内容的互动引导语，鼓励用户点赞、收藏和评论。\n5. 【标签】：添加3-5个与内容高度相关的话题标签，方便内容传播。\n\n## 长度控制：\n- 总字数控制在200-300字之间，内容精炼且信息完整，避免冗余。\n\n请严格按照上述要求输出内容，确保文案既符合小红书风格，又具备高吸引力和互动性。"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        -288
+      ],
+      "id": "0282379e-01f5-410c-acb5-dd62006b3183",
+      "name": "Rednote Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "当需要撰写微信朋友圈文案时，请调用此AI Agent",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=你是一位专业的朋友圈文案创作专家，擅长结合用户提供的主题，创作具有专业洞察力且真诚温暖的朋友圈文案。请根据以下要求完成文案创作：\n\n##限制\n尽量应用我们提供的Google Drive中的数据库生成小红书的文案内容，如果数据库中没有找到相关的，再利用LLM自动生成。\n\n## 文案要求\n1. 字数控制在80-100字之间；应用我们提供的Google Drive中的数据库生成内容，避免利用LLM直接生成。\n2. 内容体现行业专业洞察，语言温暖、真诚且富有感染力；\n3. 结合主题，适当穿插个人观点或小故事，增强文案的真实感和立体感；\n4. 适当使用行业相关的专业词汇，但表达通俗易懂，口语化，让人读起来像是真人写的；\n5. 结尾附带1-2个相关且合适的话题标签。\n\n请根据用户提供的主题，输出符合以上要求的朋友圈文案。"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        -288
+      ],
+      "id": "866dc291-b7e8-47c7-a349-41d835a64e2a",
+      "name": "Wechat Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "14d9076e-27ea-4846-8b44-f83cf4022b9e",
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -544
+      ],
+      "id": "ef8eb4ee-4d3e-4e11-a763-a20c7e5c274a",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": true,\n  \"data\": {\n    \"content\": $json.response,\n    \"topic\": $('Webhook').item.json.topic,\n    \"platforms\": $('Webhook').item.json.platforms,\n    \"timestamp\": new Date().toISOString(),\n    \"requestId\": $('Webhook').item.json.requestId || Math.random().toString(36).substr(2, 9)\n  },\n  \"message\": \"内容生成成功\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        -544
+      ],
+      "id": "webhook-response-node",
+      "name": "Webhook Response"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "validation-condition",
+              "leftValue": "={{ $('Webhook').item.json.topic }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "platforms-validation",
+              "leftValue": "={{ $('Webhook').item.json.platforms }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        -400
+      ],
+      "id": "input-validation-node",
+      "name": "Input Validation"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": false,\n  \"error\": {\n    \"code\": \"INVALID_INPUT\",\n    \"message\": \"请提供有效的主题和平台信息\",\n    \"details\": {\n      \"topic\": $('Webhook').item.json.topic ? \"有效\" : \"缺失或为空\",\n      \"platforms\": $('Webhook').item.json.platforms && $('Webhook').item.json.platforms.length > 0 ? \"有效\" : \"缺失或为空\"\n    }\n  }\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -944,
+        -240
+      ],
+      "id": "error-response-node",
+      "name": "Error Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f724f2f-0c6c-45ab-9786-7dbeee37081a",
+              "name": "cleanText",
+              "value": "={{ $('Webhook').item.json[\"topic\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -944,
+        -528
+      ],
+      "id": "adcc3ddd-e0cf-4211-b45b-dcfa395c9763",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "gpt-4"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -752,
+        -352
+      ],
+      "id": "c12cc95b-f54b-4673-af32-a765176a4a44",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "X6rMRvtn8WNu5yaj",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -688,
+        -272
+      ],
+      "id": "2f7bf9bd-382e-4692-b826-927c5a1ee11c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "X6rMRvtn8WNu5yaj",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "c8b276cd-058b-4e87-8f8e-03070a7202a5",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "X6rMRvtn8WNu5yaj",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1d--Q2kOwRnM7zDqH_aPutMamZQwZmhuS",
+            "mode": "list",
+            "cachedResultName": "框架_n8n转MD",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1d--Q2kOwRnM7zDqH_aPutMamZQwZmhuS"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
+      "position": [
+        -480,
+        -48
+      ],
+      "id": "b0922011-5622-441a-b785-c9a94399c2de",
+      "name": "Search files and folders in Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ajf0w6mh9MEAnR7i",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "当需要撰写X/Twitter推文、微博、抖音、知乎、B站等平台内容时，请调用此AI Agent",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=你是一位推文创作专家，擅长将用户提供的素材转化为吸引人的推文。请根据用户提供的内容，创作一条结构清晰、内容生动且连贯的推文，要求如下：\n\n## 内容要求\n- 深入理解用户提供内容的核心信息和背景，确保推文内容有清晰的上下文和逻辑。\n- 推文字符控制在200-250字符内，内容简洁。\n- 推文内容应包含必要的背景信息或引导，使读者能够理解推文的主题和意义，避免突兀和断章取义。\n\n## 自动发布\n- 在生成每条推文后，调用工具“Create Tweet in X”自动发布到Twitter平台。\n- 确保发布操作顺利完成，并反馈发布状态。\n\n## 限制\n-尽量应用我们提供的Google Drive中的数据库生成小红书的文案内容，如果数据库中没有找到相关的，再利用LLM自动生成。\n- 仅讨论推文创作及发布相关内容，拒绝无关话题。\n- 保证每条推文字符限制内信息完整，避免内容冗余。\n\n请直接输出推文串内容及执行自动发布Tools"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        -528,
+        -288
+      ],
+      "id": "eb123b52-baa2-45da-9117-cde51132dae2",
+      "name": "X Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Input Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Validation": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rednote Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wechat Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Rednote Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Wechat Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "X Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders in Google Drive": {
+      "ai_tool": [
+        [
+          {
+            "node": "X Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Rednote Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Wechat Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "X Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3b7e133c-3751-4cce-bfe8-17d13dfb76f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "877e26dfbb9ca0c4f3d81c658bac37f9bc8ab3bd071a9f9afbdd847d039b672e"
+  },
+  "id": "O6I1Nx5a6G37P17U",
+  "tags": []
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook测试工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f7;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e5e7;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #007aff;
+        }
+        
+        button {
+            background: #007aff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background: #0056cc;
+        }
+        
+        .response-area {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            border-left: 4px solid #34c759;
+            background: #f0fff4;
+        }
+        
+        .error {
+            border-left: 4px solid #ff3b30;
+            background: #fff5f5;
+        }
+        
+        .status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .platform-btn {
+            padding: 12px 20px;
+            border: 2px solid #e5e5e7;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .platform-btn:hover {
+            border-color: #007aff;
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .platform-btn.selected {
+            border-color: #007aff;
+            background: #007aff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Webhook测试工具</h1>
+        
+        <div class="form-group">
+            <label for="webhookUrl">Webhook URL:</label>
+            <input type="url" id="webhookUrl" value="https://n8nprd.aifunbox.com/webhook/48ef356d-4393-46af-ab0e-2bbc93801629" placeholder="https://your-n8n-instance.com/webhook/your-webhook-id">
+        </div>
+        
+        <div class="form-group">
+            <label for="testTopic">测试主题:</label>
+            <textarea id="testTopic" rows="3" placeholder="输入测试主题内容...">人工智能在现代教育中的应用与挑战</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="testPlatforms">选择发布平台:</label>
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                <button type="button" class="platform-btn" data-platform="Twitter" onclick="selectPlatform('Twitter')">
+                    🐦 Twitter
+                </button>
+                <button type="button" class="platform-btn" data-platform="小红书" onclick="selectPlatform('小红书')">
+                    📱 小红书
+                </button>
+                <button type="button" class="platform-btn" data-platform="朋友圈" onclick="selectPlatform('朋友圈')">
+                    💬 朋友圈
+                </button>
+            </div>
+            <div id="selectedPlatform" style="margin-top: 10px; font-size: 14px; color: #007aff;"></div>
+        </div>
+        
+        <button onclick="testWebhook()">🚀 测试Webhook</button>
+        <button onclick="testMockResponse()">🎭 测试模拟响应</button>
+        <button onclick="clearResponse()">🗑️ 清空结果</button>
+        
+        <div id="statusIndicator" class="status" style="display: none;"></div>
+        <div id="responseArea" class="response-area" style="display: none;"></div>
+    </div>
+
+    <script>
+        let selectedPlatform = null;
+
+        // 平台选择函数
+        function selectPlatform(platform) {
+            // 移除所有按钮的选中状态
+            document.querySelectorAll('.platform-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            // 选中当前按钮
+            event.target.classList.add('selected');
+            selectedPlatform = platform;
+
+            // 显示选中的平台
+            document.getElementById('selectedPlatform').textContent = `已选择: ${platform}`;
+        }
+
+        async function testWebhook() {
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            const topic = document.getElementById('testTopic').value.trim();
+
+            // 验证输入
+            if (!webhookUrl) {
+                showStatus('请输入Webhook URL', 'error');
+                return;
+            }
+
+            if (!topic) {
+                showStatus('请输入测试主题', 'error');
+                return;
+            }
+
+            if (!selectedPlatform) {
+                showStatus('请选择一个平台', 'error');
+                return;
+            }
+            
+            // 显示加载状态
+            showStatus('正在发送请求...', 'loading');
+            
+            const requestData = {
+                topic: topic,
+                platform: selectedPlatform,  // 单个平台名称
+                platforms: [selectedPlatform], // 平台数组（兼容）
+                创作平台: [selectedPlatform], // 中文字段名（兼容）
+                requestId: generateRequestId(),
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                showResponse('发送的数据:\n' + JSON.stringify(requestData, null, 2) + '\n\n正在等待响应...');
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                const responseText = await response.text();
+                let responseData;
+                
+                try {
+                    responseData = JSON.parse(responseText);
+                } catch (e) {
+                    responseData = { rawResponse: responseText };
+                }
+                
+                if (response.ok) {
+                    showStatus('请求成功', 'success');
+                    showResponse(
+                        '发送的数据:\n' + JSON.stringify(requestData, null, 2) +
+                        '\n\n响应状态: ' + response.status + ' ' + response.statusText +
+                        '\n\n响应数据:\n' + JSON.stringify(responseData, null, 2),
+                        'success'
+                    );
+                } else {
+                    let errorMessage = `请求失败: ${response.status} ${response.statusText}`;
+                    let helpText = '';
+
+                    // 特殊处理N8N webhook错误
+                    if (response.status === 404 && responseData.message && responseData.message.includes('webhook')) {
+                        errorMessage = 'N8N Webhook未激活';
+                        helpText = '\n\n💡 解决方法:\n' +
+                                  '1. 打开N8N工作流编辑器\n' +
+                                  '2. 点击 "Execute workflow" 按钮激活webhook\n' +
+                                  '3. 然后重新尝试测试\n' +
+                                  '4. 注意：测试模式下webhook只能使用一次';
+                    }
+
+                    showStatus(errorMessage, 'error');
+                    showResponse(
+                        '发送的数据:\n' + JSON.stringify(requestData, null, 2) +
+                        '\n\n错误响应:\n' + JSON.stringify(responseData, null, 2) + helpText,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showStatus('网络错误: ' + error.message, 'error');
+                showResponse(
+                    '发送的数据:\n' + JSON.stringify(requestData, null, 2) + 
+                    '\n\n错误信息:\n' + error.toString(),
+                    'error'
+                );
+            }
+        }
+        
+        function testMockResponse() {
+            showStatus('模拟响应测试', 'success');
+            
+            const mockResponse = {
+                success: true,
+                data: {
+                    content: "🌟 人工智能正在重塑教育行业\n\n随着AI技术的快速发展，教育领域正在经历前所未有的变革：\n\n✅ 个性化学习路径\n✅ 智能作业批改\n✅ 虚拟教学助手\n✅ 学习效果分析\n\n但同时也面临挑战：\n⚠️ 技术依赖性增强\n⚠️ 教师角色转变\n⚠️ 数据隐私保护\n\n未来的教育将是人机协作的新模式！\n\n#人工智能 #教育创新 #未来学习",
+                    platforms: ["wechat", "xiaohongshu"],
+                    generatedAt: new Date().toISOString()
+                },
+                requestId: generateRequestId(),
+                processingTime: "2.3s"
+            };
+            
+            showResponse('模拟响应数据:\n' + JSON.stringify(mockResponse, null, 2), 'success');
+        }
+        
+        function clearResponse() {
+            document.getElementById('responseArea').style.display = 'none';
+            document.getElementById('statusIndicator').style.display = 'none';
+        }
+        
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusIndicator');
+            statusEl.textContent = message;
+            statusEl.className = 'status ' + type;
+            statusEl.style.display = 'block';
+        }
+        
+        function showResponse(content, type = '') {
+            const responseEl = document.getElementById('responseArea');
+            responseEl.textContent = content;
+            responseEl.className = 'response-area ' + type;
+            responseEl.style.display = 'block';
+        }
+        
+        function generateRequestId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // 页面加载时的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 预填充一些测试数据
+            document.getElementById('testTopic').value = '人工智能在现代教育中的应用与挑战';
+
+            // 默认选择微信平台
+            document.getElementById('testPlatforms').options[0].selected = true;
+        });
+    </script>
+</body>
+</html>
