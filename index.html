@@ -91,30 +91,35 @@
         
         .hero-section {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 60px;
             align-items: center;
             margin-bottom: 80px;
         }
         
+        .hero-content {
+            text-align: center;
+        }
+
         .hero-content h1 {
-            font-size: 48px;
+            font-size: 56px;
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 20px;
             color: white;
         }
-        
+
         .hero-content p {
-            font-size: 20px;
+            font-size: 22px;
             line-height: 1.6;
             margin-bottom: 30px;
             color: rgba(255, 255, 255, 0.9);
         }
-        
+
         .hero-buttons {
             display: flex;
             gap: 20px;
+            justify-content: center;
         }
         
         .btn-primary {
@@ -430,12 +435,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">🚀 ContentAI</a>
-            <ul class="nav-links">
-                <li><a href="#generator">生成器</a></li>
-                <li><a href="setup-guide.html">设置指南</a></li>
-                <li><a href="webhook-test.html">测试工具</a></li>
-                <li><a href="#help">帮助</a></li>
-            </ul>
+
             <a href="#generator" class="cta-button">开始创作</a>
         </div>
     </nav>
@@ -452,12 +452,7 @@
                     <a href="#features" class="btn-secondary">了解更多</a>
                 </div>
             </div>
-            <div class="hero-visual">
-                <!-- 这里可以放置一个展示图片或动画 -->
-                <div style="background: rgba(255,255,255,0.1); height: 300px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
-                    📱💻📝<br>多平台内容预览
-                </div>
-            </div>
+
         </section>
 
         <!-- 内容生成器 -->
