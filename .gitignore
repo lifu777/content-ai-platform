@@ -45,3 +45,4 @@ venv/
 # 其他
 *.bak
 *.backup
+.vercel
