@@ -536,7 +536,7 @@
                     </div>
                     <div class="result-content" id="resultContent"></div>
                     <div class="result-actions">
-                        <button class="btn-copy" onclick="copyResult()">
+                        <button class="btn-copy" onclick="copyResult(event)">
                             📋 复制内容
                         </button>
                         <button class="btn-edit" onclick="editResult()">
@@ -875,7 +875,7 @@
         }
         
         // 复制结果
-        function copyResult() {
+        function copyResult(event) {
             const content = resultContent.textContent;
             navigator.clipboard.writeText(content).then(() => {
                 // 临时改变按钮文本
@@ -883,14 +883,52 @@
                 const originalText = copyBtn.textContent;
                 copyBtn.textContent = '✅ 已复制';
                 copyBtn.style.background = '#28a745';
-                
+
                 setTimeout(() => {
                     copyBtn.textContent = originalText;
                     copyBtn.style.background = '#34c759';
                 }, 2000);
-            }).catch(() => {
-                showError('复制失败，请手动选择复制');
+            }).catch((error) => {
+                console.error('复制失败:', error);
+                // 提供备用复制方法
+                fallbackCopy(content, event.target);
             });
+        }
+
+        // 备用复制方法
+        function fallbackCopy(text, button) {
+            try {
+                // 创建临时文本区域
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                // 尝试使用 execCommand
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                if (successful) {
+                    // 显示成功状态
+                    const originalText = button.textContent;
+                    button.textContent = '✅ 已复制';
+                    button.style.background = '#28a745';
+
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '#34c759';
+                    }, 2000);
+                } else {
+                    showError('复制失败，请手动选择复制');
+                }
+            } catch (err) {
+                console.error('备用复制方法也失败:', err);
+                showError('复制失败，请手动选择复制');
+            }
         }
         
         // 编辑结果
