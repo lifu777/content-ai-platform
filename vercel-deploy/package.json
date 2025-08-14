@@ -1,0 +1,21 @@
+{
+  "name": "ai-content-generator",
+  "version": "1.0.0",
+  "description": "AI内容生成器 - 为不同平台生成专业的社交媒体内容",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "build": "echo 'Static site, no build needed'"
+  },
+  "keywords": [
+    "ai",
+    "content-generator",
+    "social-media",
+    "chinese"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}

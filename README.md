@@ -1,182 +1,127 @@
-# 自媒体内容生成平台
+# 🚀 ContentAI - 自媒体内容创作平台
 
-一个基于AI的自媒体内容生成平台，支持多平台内容创作，采用现代化的苹果风格设计。
+一个基于AI技术的自媒体内容生成平台，支持多平台内容创作。
 
-## 🌟 功能特点
+## ✨ 功能特点
 
-- **智能内容生成**: 基于用户输入的主题，自动生成适配不同平台的内容
-- **多平台支持**: 支持微信、小红书、X(Twitter)等主流社交媒体平台
-- **现代化设计**: 采用苹果风格的简洁设计，支持响应式布局
-- **实时预览**: 即时显示生成的内容，支持编辑和复制
-- **N8N集成**: 无缝对接N8N工作流，实现自动化内容生成
+- 🤖 AI驱动的智能内容生成
+- 📱 支持多平台内容适配（微信、微博、抖音等）
+- 🎨 现代化UI设计，响应式布局
+- ⚡ 快速部署，一键生成
+- 📋 一键复制生成内容
 
 ## 🚀 快速开始
 
-### 1. Webhook已配置 ✅
+### 本地运行
 
-您的N8N webhook已经配置完成：
-```
-https://n8nprd.aifunbox.com/webhook-test/48ef356d-4393-46af-ab0e-2bbc93801629
-```
-
-如需修改，请编辑 `config.js` 文件中的 `WEBHOOK_URL`。
-
-### 2. 启动网页
-
-**方式一：使用启动脚本（推荐）**
+1. 克隆项目
 ```bash
-# 运行启动脚本，会自动选择合适的服务器
-./start.sh
-
-# 或者使用Python脚本
-python3 start-server.py
+git clone https://github.com/yourusername/content-ai-platform.git
+cd content-ai-platform
 ```
 
-**方式二：手动启动**
+2. 启动本地服务器
 ```bash
-# 使用Python启动本地服务器
-python3 -m http.server 8000
+# 使用Python
+python -m http.server 8000
 
 # 或使用Node.js
-npx serve . -p 8000
-
-# 然后访问 http://localhost:8000
+npx serve .
 ```
 
-**方式三：直接打开文件**
-直接在浏览器中打开 `index.html` 文件（可能遇到CORS限制）
+3. 打开浏览器访问 `http://localhost:8000`
 
-### 3. 使用说明
+### 部署到Vercel
 
-1. **输入主题**: 在文本框中输入您想要创作的内容主题
-2. **选择平台**: 点击选择一个或多个目标平台
-3. **生成内容**: 点击"生成内容"按钮，等待AI处理
-4. **查看结果**: 生成的内容会显示在下方，支持复制和编辑
+1. 安装Vercel CLI
+```bash
+npm i -g vercel
+```
 
-## 🔧 配置说明
+2. 登录Vercel
+```bash
+vercel login
+```
+
+3. 部署项目
+```bash
+vercel
+```
+
+## 📁 项目结构
+
+```
+content-ai-platform/
+├── index.html          # 主页面文件
+├── user_version.html   # 用户版本页面
+├── styles.css          # 样式文件
+├── config.js           # 配置文件
+├── package.json        # 项目配置
+├── vercel.json         # Vercel部署配置
+├── README.md           # 项目说明
+└── .gitignore          # Git忽略文件
+```
+
+## ⚙️ 配置说明
+
+### Webhook配置
+
+在 `config.js` 文件中配置你的N8N webhook URL：
+
+```javascript
+const CONFIG = {
+    WEBHOOK_URL: "https://your-n8n-instance.com/webhook/your-webhook-id",
+    // 其他配置...
+};
+```
 
 ### 平台配置
 
-在 `config.js` 中可以自定义支持的平台：
+支持的自媒体平台：
+- 微信公众号
+- 微博
+- 抖音
+- 小红书
+- B站
+- 知乎
 
-```javascript
-PLATFORMS: [
-    {
-        id: 'wechat',           // 平台ID
-        name: '微信',           // 显示名称
-        icon: '💬',            // 图标
-        description: '适合朋友圈分享的内容格式'
-    }
-    // ... 添加更多平台
-]
-```
+## 🛠️ 技术栈
 
-### 验证规则
+- HTML5
+- CSS3 (现代CSS特性)
+- JavaScript (ES6+)
+- Vercel (部署平台)
 
-```javascript
-VALIDATION: {
-    TOPIC_MIN_LENGTH: 10,    // 主题最小长度
-    TOPIC_MAX_LENGTH: 500,   // 主题最大长度
-    MIN_PLATFORMS: 1,        // 最少选择平台数
-    MAX_PLATFORMS: 3         // 最多选择平台数
-}
-```
+## 📝 使用说明
 
-## 📡 N8N集成
+1. 在文本框中输入你想要创作的主题
+2. 选择目标发布平台
+3. 点击"生成内容"按钮
+4. 等待AI生成内容
+5. 复制生成的内容到目标平台
 
-### Webhook数据格式
+## 🔧 故障排除
 
-发送到N8N的数据格式：
+### 常见问题
 
-```json
-{
-    "topic": "用户输入的主题内容",
-    "platforms": ["wechat", "xiaohongshu"],
-    "requestId": "唯一请求ID"
-}
-```
+1. **Webhook连接失败**
+   - 检查N8N webhook URL是否正确
+   - 确认N8N工作流已激活
+   - 检查网络连接
 
-### 期望返回格式
-
-N8N工作流应返回以下格式的数据：
-
-```json
-{
-    "success": true,
-    "data": {
-        "content": "生成的内容文本"
-    }
-}
-```
-
-错误情况：
-
-```json
-{
-    "success": false,
-    "error": {
-        "message": "错误描述"
-    }
-}
-```
-
-## 🎨 设计特点
-
-- **渐变背景**: 使用蓝紫色渐变，营造现代科技感
-- **毛玻璃效果**: 导航栏和卡片使用backdrop-filter实现毛玻璃效果
-- **圆角设计**: 大量使用圆角元素，符合现代设计趋势
-- **微交互**: 悬停效果、按钮动画等提升用户体验
-- **响应式布局**: 适配桌面和移动设备
-
-## 🔒 安全考虑
-
-- 输入验证：前端和后端都应进行输入验证
-- 请求限制：建议在N8N中添加请求频率限制
-- 错误处理：优雅处理各种错误情况
-- HTTPS：生产环境建议使用HTTPS
-
-## 📱 浏览器兼容性
-
-- Chrome 88+
-- Firefox 85+
-- Safari 14+
-- Edge 88+
-
-## 🛠️ 自定义开发
-
-### 添加新平台
-
-1. 在 `config.js` 的 `PLATFORMS` 数组中添加新平台配置
-2. 确保N8N工作流支持新平台的内容生成
-
-### 修改样式
-
-主要样式定义在 `<style>` 标签中，可以根据需要调整：
-
-- 颜色主题
-- 布局尺寸
-- 动画效果
-- 响应式断点
-
-### 扩展功能
-
-可以考虑添加的功能：
-
-- 历史记录保存
-- 内容模板管理
-- 批量生成
-- 内容预览
-- 社交分享
-
-## 📞 技术支持
-
-如有问题，请检查：
-
-1. N8N webhook是否正确配置
-2. 网络连接是否正常
-3. 浏览器控制台是否有错误信息
-4. 输入内容是否符合验证规则
+2. **内容生成失败**
+   - 检查OpenAI API配置
+   - 查看N8N执行日志
+   - 确认平台名称配置正确
 
 ## 📄 许可证
 
-本项目仅供学习和个人使用。
+MIT License
+
+## 🤝 贡献
+
+欢迎提交Issue和Pull Request！
+
+## 📞 联系方式
+
+如有问题，请通过GitHub Issues联系。

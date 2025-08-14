@@ -1,0 +1,22 @@
+{
+  "name": "content-ai-platform",
+  "version": "1.0.0",
+  "description": "AI驱动的自媒体内容创作平台",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": [
+    "ai",
+    "content-generation",
+    "自媒体",
+    "webhook"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/content-ai-platform.git"
+  }
+}
